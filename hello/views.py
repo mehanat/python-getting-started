@@ -44,16 +44,24 @@ class CommandReceiveView(View):
 
     def post(self, request):
         print(request.body)
-        payload = json.loads(request.body.decode('utf-8'))
-        chat_id = payload['message']['chat']['id']
-        message = payload['message'].get('text')
-        print(message)
-        #TelegramBot.sendMessage(chat_id, f"You said `${message}`")
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text='Button1', callback_data='press1')],
-            [InlineKeyboardButton(text='Button2', callback_data='press2')],
-        ])
-        TelegramBot.sendMessage(chat_id, 'Use inline keyboard', reply_markup=keyboard)
+        payloadStr = request.body.decode('utf-8')
+        payload = json.loads(payloadStr)
+
+        if payloadStr.contains('callback_query'):
+            chat_id = payload['callback_query']['message']['chat']['id']
+            message = payload['callback_query']['data']
+            TelegramBot.sendMessage(chat_id, f"Вы нажали кнопку `{message}`")
+        else:
+
+            chat_id = payload['message']['chat']['id']
+            message = payload['message'].get('text')
+            print(message)
+
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text='Button1', callback_data='press1')],
+                [InlineKeyboardButton(text='Button2', callback_data='press2')],
+            ])
+            TelegramBot.sendMessage(chat_id, 'Нажми кнопку', reply_markup=keyboard)
         return JsonResponse({}, status=200)
 
     @method_decorator(csrf_exempt)
