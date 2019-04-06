@@ -26,6 +26,7 @@ def db(request):
 
 TOKEN = "777893642:AAG3I_qD-yLxWHKdJzzOaua_CwFh5k6G4ME"
 TelegramBot = telepot.Bot(TOKEN)
+TelegramBot.setWebhook('https://mehanat-django.herokuapp.com/bot/'.format(bot_token=TOKEN))
 
 # Create your views here.
 def index(request):
