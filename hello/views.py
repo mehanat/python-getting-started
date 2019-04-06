@@ -34,6 +34,12 @@ TelegramBot.setWebhook('https://mehanat-django.herokuapp.com/bot/'.format(bot_to
 def index(request):
     return HttpResponse('ok')
 
+def on_callback_query(msg):
+    query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
+    print('Callback Query:', query_id, from_id, query_data)
+
+    TelegramBot.answerCallbackQuery(query_id, text='Got it')
+
 class CommandReceiveView(View):
 
     def post(self, request):
@@ -44,7 +50,8 @@ class CommandReceiveView(View):
         print(message)
         #TelegramBot.sendMessage(chat_id, f"You said `${message}`")
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text='Press me', callback_data='press')],
+            [InlineKeyboardButton(text='Button1', callback_data='press1')],
+            [InlineKeyboardButton(text='Button2', callback_data='press2')],
         ])
         TelegramBot.sendMessage(chat_id, 'Use inline keyboard', reply_markup=keyboard)
         return JsonResponse({}, status=200)
