@@ -1,4 +1,4 @@
 django
 gunicorn
 django-heroku
-telepot==6.7
+telepot==12.7

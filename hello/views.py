@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 import telepot
+from telepot.loop import MessageLoop
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, JsonResponse
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
@@ -40,7 +42,11 @@ class CommandReceiveView(View):
         chat_id = payload['message']['chat']['id']
         message = payload['message'].get('text')
         print(message)
-        TelegramBot.sendMessage(chat_id, f"You said `${message}`")
+        #TelegramBot.sendMessage(chat_id, f"You said `${message}`")
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='Press me', callback_data='press')],
+        ])
+        TelegramBot.sendMessage(chat_id, 'Use inline keyboard', reply_markup=keyboard)
         return JsonResponse({}, status=200)
 
     @method_decorator(csrf_exempt)
