@@ -47,7 +47,7 @@ class CommandReceiveView(View):
         payloadStr = request.body.decode('utf-8')
         payload = json.loads(payloadStr)
 
-        if payloadStr.contains('callback_query'):
+        if 'callback_query' in payloadStr:
             chat_id = payload['callback_query']['message']['chat']['id']
             message = payload['callback_query']['data']
             TelegramBot.sendMessage(chat_id, f"Вы нажали кнопку `{message}`")
